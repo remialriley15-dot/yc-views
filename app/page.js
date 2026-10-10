@@ -1,0 +1,16 @@
+"use client";
+import {useState} from "react";
+const starter=[{id:1,title:"My first campaign",url:"https://www.tiktok.com/",budget:100,clicks:0,status:"Active"}];
+export default function Home(){
+ const [credits,setCredits]=useState(250),[campaigns,setCampaigns]=useState(starter),[url,setUrl]=useState(""),[budget,setBudget]=useState(50),[msg,setMsg]=useState("");
+ function add(e){e.preventDefault();const b=Number(budget);if(!url.includes("tiktok.com"))return setMsg("Paste a valid TikTok video link.");if(b<10||b>credits)return setMsg("Choose at least 10 credits and stay within your balance.");setCampaigns([{id:Date.now(),title:"TikTok campaign",url,budget:b,clicks:0,status:"Active"},...campaigns]);setCredits(credits-b);setUrl("");setMsg("Campaign created.");}
+ return <main>
+  <nav><div className="brand"><span>YC</span> Views</div><div className="pill">⚡ {credits} credits</div></nav>
+  <section className="hero"><div className="badge">CREATOR DISCOVERY PLATFORM</div><h1>Get your videos<br/><em>discovered.</em></h1><p>Share your TikTok with real people and track the traffic YC Views sends to your content.</p><a href="#campaign" className="primary">Start a campaign →</a></section>
+  <section className="stats"><article><b>{credits}</b><small>Credits available</small></article><article><b>{campaigns.length}</b><small>Campaigns</small></article><article><b>{campaigns.reduce((a,c)=>a+c.clicks,0)}</b><small>Outbound visits</small></article></section>
+  <section id="campaign" className="grid"><div className="card"><div className="eyebrow">PROMOTE</div><h2>Create campaign</h2><p className="muted">Add a TikTok URL and choose your credit budget.</p><form onSubmit={add}><label>TikTok video URL</label><input value={url} onChange={e=>setUrl(e.target.value)} placeholder="https://www.tiktok.com/@user/video/..."/><label>Credits to spend</label><input type="number" min="10" value={budget} onChange={e=>setBudget(e.target.value)}/><button className="primary" type="submit">Launch campaign</button>{msg&&<div className="message">{msg}</div>}</form></div>
+  <div className="card"><div className="eyebrow">EARN</div><h2>Discover creators</h2><p className="muted">Earn credits by discovering videos from other creators. Visits are voluntary—no automated playback or fake traffic.</p><div className="discover"><div className="play">▶</div><div><b>Creator discovery</b><p>Open a creator's TikTok and explore their content.</p></div></div><button className="secondary" onClick={()=>setCredits(credits+5)}>Demo: earn 5 credits</button></div></section>
+  <section className="campaigns"><div className="sectionHead"><div><div className="eyebrow">DASHBOARD</div><h2>Your campaigns</h2></div></div>{campaigns.map(c=><div className="row" key={c.id}><div className="icon">♪</div><div className="grow"><b>{c.title}</b><small>{c.budget} credits allocated</small></div><div><b>{c.clicks}</b><small>visits</small></div><span className="active">{c.status}</span><a href={c.url} target="_blank" rel="noreferrer">Open ↗</a></div>)}</section>
+  <footer><div className="brand"><span>YC</span> Views</div><p>Built for creator discovery. YC Views tracks outbound traffic; TikTok determines its own view counts.</p></footer>
+ </main>
+}
